@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Проверка продуктов — Академия Вкусного Похудения</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Geologica:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg:#080808; --card:#111; --card-2:#161616; --line:#292929; --text:#f0ebe3; --muted:#96918a; --accent:#ff4500; --green:#78d64b; --yellow:#ffcc4d; --red:#ff7065; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font-family:Geologica,Arial,sans-serif; }
+    button,input,select { font:inherit; }
+    button { cursor:pointer; }
+    .shell { max-width:1220px; margin:0 auto; padding:0 20px 54px; }
+    .hero { position:relative; overflow:hidden; border-bottom:1px solid var(--line); background:radial-gradient(circle at 88% 0,rgba(255,69,0,.20),transparent 28%),linear-gradient(145deg,#17100d 0%,#080808 52%); }
+    .hero::before { content:""; position:absolute; width:430px; height:430px; border:54px solid rgba(255,69,0,.07); border-radius:50%; right:-145px; top:-265px; }
+    .hero-inner { max-width:1220px; margin:0 auto; padding:24px 20px 30px; position:relative; }
+    .back { display:inline-flex; align-items:center; gap:7px; color:#ff7141; text-decoration:none; font-size:13px; margin-bottom:32px; }
+    .eyebrow { color:#ff7141; font-size:10px; letter-spacing:2px; text-transform:uppercase; font-weight:700; }
+    h1 { max-width:700px; margin:9px 0 11px; font:clamp(45px,8vw,83px)/.9 "Bebas Neue",Impact,sans-serif; letter-spacing:1px; }
+    .hero p { max-width:650px; margin:0; color:#c8c1b9; line-height:1.55; font-size:14px; }
+    .statline { display:flex; gap:9px; flex-wrap:wrap; margin-top:20px; }
+    .stat { border:1px solid #443126; background:rgba(0,0,0,.22); padding:8px 10px; font-size:11px; color:#c9c0b8; }
+    .stat b { color:#fff; font-size:14px; margin-right:4px; }
+    .toolbar { position:sticky; top:0; z-index:10; background:rgba(8,8,8,.94); backdrop-filter:blur(12px); border-bottom:1px solid var(--line); }
+    .toolbar-in { max-width:1220px; margin:0 auto; padding:11px 20px; display:grid; grid-template-columns:minmax(210px,1fr) auto; gap:10px; }
+    .search { width:100%; min-width:0; background:#141414; color:var(--text); border:1px solid #333; padding:12px 14px; outline:none; }
+    .search:focus { border-color:var(--accent); }
+    .sort { color:var(--text); background:#141414; border:1px solid #333; padding:0 10px; outline:none; }
+    .filters { grid-column:1 / -1; display:flex; gap:8px; overflow:auto; padding:13px 0 3px; scrollbar-width:none; }
+    .filters::-webkit-scrollbar { display:none; }
+    .chip { flex:none; border:1px solid #303030; background:#111; color:#aaa; padding:8px 11px; font-size:12px; white-space:nowrap; }
+    .chip.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .subfilters { grid-column:1 / -1; display:flex; gap:8px; overflow:auto; padding:8px 0 0; scrollbar-width:none; }
+    .subfilters::-webkit-scrollbar { display:none; }
+    .shop { flex:none; border:0; color:#aaa; background:transparent; padding:5px 2px; font-size:12px; white-space:nowrap; }
+    .shop.active { color:#fff; border-bottom:2px solid var(--accent); }
+    .topline { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:22px 0 12px; }
+    .count { color:var(--muted); font-size:13px; }
+    .note { color:#77716b; font-size:12px; line-height:1.45; text-align:right; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(286px,1fr)); gap:11px; }
+    .card { position:relative; border:1px solid var(--line); background:var(--card); overflow:hidden; text-align:left; color:inherit; padding:0; transition:transform .17s,border-color .17s,background .17s; }
+    .card:hover { transform:translateY(-2px); border-color:#70412b; background:var(--card-2); }
+    .card-top { display:grid; grid-template-columns:88px 1fr; gap:12px; padding:12px; }
+    .photo { width:88px; height:88px; display:grid; place-items:center; background:#fff; overflow:hidden; }
+    .photo img { width:100%; height:100%; object-fit:contain; }
+    .no-photo { color:#777; font-size:27px; }
+    .category { display:inline-block; color:#ff7547; font-size:10px; letter-spacing:1.15px; text-transform:uppercase; margin-bottom:5px; }
+    .name { font-size:14px; font-weight:600; line-height:1.3; }
+    .maker { margin-top:4px; color:var(--muted); font-size:11px; line-height:1.3; }
+    .metrics { display:grid; grid-template-columns:repeat(3,1fr); border-top:1px solid var(--line); }
+    .metric { padding:10px 9px 11px; border-right:1px solid var(--line); }
+    .metric:last-child { border-right:0; }
+    .metric-label { color:#817b74; font-size:10px; text-transform:uppercase; letter-spacing:.8px; }
+    .metric-value { margin-top:4px; font-size:13px; font-weight:700; }
+    .metric-value small { color:#aaa29a; font-size:10px; font-weight:400; }
+    .delta { margin-top:3px; font-size:10px; font-weight:600; }
+    .delta.ok { color:var(--green); }.delta.warn { color:var(--yellow); }.delta.bad { color:var(--red); }
+    .card-foot { min-height:34px; display:flex; align-items:center; justify-content:space-between; gap:8px; padding:8px 12px; border-top:1px solid var(--line); color:#8d8780; font-size:11px; }
+    .mark { color:#ff7547; font-weight:700; letter-spacing:.3px; }
+    .empty { display:none; padding:80px 20px; text-align:center; color:var(--muted); }
+    .empty b { display:block; color:var(--text); font:32px "Bebas Neue",sans-serif; margin-bottom:8px; }
+    .loading { padding:72px 20px; text-align:center; color:var(--muted); }
+    .spinner { width:32px; height:32px; margin:0 auto 14px; border:3px solid #31261f; border-top-color:var(--accent); border-radius:50%; animation:spin .65s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .modal { position:fixed; inset:0; display:none; z-index:30; padding:18px; overflow:auto; background:rgba(0,0,0,.78); }
+    .modal.open { display:block; }
+    .dialog { max-width:720px; margin:18px auto; border:1px solid #443126; border-top:3px solid var(--accent); background:#111; position:relative; }
+    .close { position:absolute; right:10px; top:10px; width:35px; height:35px; border:0; background:#252525; color:#fff; font-size:22px; z-index:2; }
+    .detail-head { display:grid; grid-template-columns:170px 1fr; gap:20px; padding:26px 26px 20px; }
+    .detail-photo { background:#fff; height:170px; display:grid; place-items:center; overflow:hidden; }
+    .detail-photo img { width:100%; height:100%; object-fit:contain; }
+    .detail-name { padding-right:38px; font:31px/1 "Bebas Neue",Impact,sans-serif; letter-spacing:.6px; }
+    .detail-maker { margin-top:8px; color:var(--muted); font-size:13px; }
+    .detail-meta { display:flex; gap:7px; flex-wrap:wrap; margin-top:16px; }
+    .pill { padding:5px 7px; border:1px solid #333; color:#aaa39b; font-size:11px; }
+    .detail-body { border-top:1px solid var(--line); padding:22px 26px 28px; }
+    .detail-title { color:#f5eee6; font:22px "Bebas Neue",sans-serif; letter-spacing:.6px; margin:0 0 10px; }
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    th,td { text-align:right; padding:10px; border-bottom:1px solid var(--line); }
+    th:first-child,td:first-child { text-align:left; } th { color:#918b84; font-size:10px; letter-spacing:.8px; text-transform:uppercase; font-weight:600; }
+    .facts { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:20px; }
+    .fact { border:1px solid var(--line); padding:10px; }
+    .fact span { display:block; color:#847e77; font-size:10px; text-transform:uppercase; letter-spacing:.6px; }
+    .fact b { display:block; margin-top:4px; font-size:14px; }
+    .protocols { margin-top:21px; display:flex; gap:8px; flex-wrap:wrap; }
+    .protocol { background:var(--accent); color:#fff; text-decoration:none; padding:10px 12px; font-size:12px; font-weight:700; }
+    .disclaimer { margin:18px 0 0; color:#7f7871; font-size:11px; line-height:1.55; }
+    @media (max-width:620px) { .shell,.hero-inner,.toolbar-in { padding-left:14px; padding-right:14px; } .toolbar-in { grid-template-columns:1fr; } .sort { height:40px; } .note { display:none; } .detail-head { grid-template-columns:100px 1fr; gap:13px; padding:19px 18px 17px; } .detail-photo { height:100px; } .detail-name { font-size:26px; } .detail-body { padding:18px; } .facts { grid-template-columns:1fr 1fr; } .grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <section class="hero"><div class="hero-inner">
+    <a class="back" href="index.html">← В каталог рецептов</a>
+    <div class="eyebrow">выбирайте продукты осознанно</div>
+    <h1>ПРОВЕРКА<br>ПРОДУКТОВ</h1>
+    <p>Сравнивайте значения БЖУ на упаковке с результатами лабораторных исследований. Откройте карточку продукта, чтобы посмотреть все показатели и протокол испытаний.</p>
+    <div class="statline"><div class="stat"><b id="allCount">—</b> продуктов</div><div class="stat"><b id="catCount">—</b> категорий</div><div class="stat">БЖУ <b>на 100 г</b></div></div>
+  </div></section>
+  <section class="toolbar"><div class="toolbar-in">
+    <input id="search" class="search" type="search" placeholder="🔍 Найти продукт или производителя">
+    <select id="sort" class="sort" aria-label="Сортировка"><option value="new">Сначала новые</option><option value="protein">Больше белка</option><option value="delta">Больше расхождение</option><option value="price">Дешевле 1 г белка</option></select>
+    <div id="categories" class="filters"></div>
+    <div id="shops" class="subfilters"></div>
+  </div></section>
+  <main class="shell">
+    <div class="topline"><div id="count" class="count">Загружаем продукты…</div><div class="note">Нажмите на карточку — откроются все данные</div></div>
+    <div id="loading" class="loading"><div class="spinner"></div>Загружаем каталог проверок…</div>
+    <div id="grid" class="grid"></div>
+    <div id="empty" class="empty"><b>Ничего не нашли</b>Попробуйте изменить запрос или фильтры.</div>
+  </main>
+  <div id="modal" class="modal" aria-hidden="true"><div id="dialog" class="dialog"></div></div>
+  <script>
+    (() => {
+      const DATA_URL = 'https://proverki.zhzhgis.ru/data.js';
+      const ASSET_URL = 'https://proverki.zhzhgis.ru/';
+      const $ = s => document.querySelector(s);
+      const state = { q:'', category:'', shop:'', sort:'new', items:[] };
+      const esc = v => String(v ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+      const num = v => v == null || v === '' ? '—' : Number(v).toLocaleString('ru-RU',{maximumFractionDigits:2});
+      const money = v => v == null ? '—' : Number(v).toLocaleString('ru-RU',{maximumFractionDigits:0}) + ' ₽';
+      const image = v => v ? ASSET_URL + String(v).replace(/^\/+/, '') : '';
+      const delta = (label, lab) => label == null || lab == null ? null : Number(lab) - Number(label);
+      const deltaClass = d => d == null ? '' : Math.abs(d) <= 1 ? 'ok' : Math.abs(d) <= 5 ? 'warn' : 'bad';
+      const deltaText = d => d == null ? 'нет данных' : (d > 0 ? '+' : '') + num(d) + ' г';
+      const quality = it => Math.max(...['p','f','c'].map(k => Math.abs(delta(it[k]?.[0],it[k]?.[1]) || 0)));
+      const matches = it => {
+        const q = state.q.toLowerCase();
+        return (!state.category || it.cat === state.category) && (!state.shop || it.shop === state.shop) && (!q || [it.name,it.maker,it.cat,it.shop].join(' ').toLowerCase().includes(q));
+      };
+      const list = () => {
+        const out = state.items.filter(matches).slice();
+        if (state.sort === 'protein') out.sort((a,b) => (b.p?.[1]||-1)-(a.p?.[1]||-1));
+        if (state.sort === 'delta') out.sort((a,b) => quality(b)-quality(a));
+        if (state.sort === 'price') out.sort((a,b) => (a.rpg ?? Infinity)-(b.rpg ?? Infinity));
+        if (state.sort === 'new') out.sort((a,b) => String(b.sort||'').localeCompare(String(a.sort||'')));
+        return out;
+      };
+      const metric = (name, data) => {
+        const d = delta(data?.[0],data?.[1]);
+        return `<div class="metric"><div class="metric-label">${name}</div><div class="metric-value">${num(data?.[1])} <small>г</small></div><div class="delta ${deltaClass(d)}">${d == null ? 'нет данных' : deltaText(d)}</div></div>`;
+      };
+      const render = () => {
+        const products = list();
+        $('#count').textContent = `Найдено: ${products.length} из ${state.items.length}`;
+        $('#grid').innerHTML = products.map(it => `<button class="card" type="button" data-id="${esc(it.id)}"><div class="card-top"><div class="photo">${it.img ? `<img loading="lazy" src="${esc(image(it.img))}" alt="">` : '<span class="no-photo">◌</span>'}</div><div><div class="category">${esc(it.cat || 'Продукт')}</div><div class="name">${esc(it.name)}</div><div class="maker">${esc(it.maker || 'Производитель не указан')}</div></div></div><div class="metrics">${metric('Белок',it.p)}${metric('Жир',it.f)}${metric('Углеводы',it.c)}</div><div class="card-foot"><span>${esc(it.shop || it.date || '')}</span><span class="mark">СМОТРЕТЬ →</span></div></button>`).join('');
+        $('#empty').style.display = products.length ? 'none' : 'block';
+      };
+      const close = () => { $('#modal').classList.remove('open'); $('#modal').setAttribute('aria-hidden','true'); document.body.style.overflow=''; };
+      const open = id => {
+        const it = state.items.find(x => x.id === id); if (!it) return;
+        const row = (name, data) => { const d=delta(data?.[0],data?.[1]); return `<tr><td>${name}, г</td><td>${num(data?.[0])}</td><td><b>${num(data?.[1])}</b></td><td class="delta ${deltaClass(d)}">${deltaText(d)}</td></tr>`; };
+        const docs = Array.isArray(it.docs) ? it.docs.filter(Boolean) : [];
+        $('#dialog').innerHTML = `<button class="close" aria-label="Закрыть">×</button><section class="detail-head"><div class="detail-photo">${it.img ? `<img src="${esc(image(it.img))}" alt="">` : '<span class="no-photo">◌</span>'}</div><div><div class="category">${esc(it.cat || 'Продукт')}</div><div class="detail-name">${esc(it.name)}</div><div class="detail-maker">${esc(it.maker || 'Производитель не указан')}</div><div class="detail-meta">${it.shop ? `<span class="pill">${esc(it.shop)}</span>` : ''}${it.date ? `<span class="pill">Проверка: ${esc(it.date)}</span>` : ''}</div></div></section><section class="detail-body"><h2 class="detail-title">БЖУ НА 100 Г</h2><table><thead><tr><th></th><th>На упаковке</th><th>По анализу</th><th>Разница</th></tr></thead><tbody>${row('Белок',it.p)}${row('Жир',it.f)}${row('Углеводы',it.c)}</tbody></table><div class="facts"><div class="fact"><span>Цена покупки</span><b>${money(it.price)}</b></div><div class="fact"><span>1 г белка</span><b>${it.rpg == null ? '—' : num(it.rpg) + ' ₽'}</b></div><div class="fact"><span>Дата проверки</span><b>${esc(it.date || '—')}</b></div></div>${docs.length ? `<div class="protocols">${docs.map((d,i)=>`<a class="protocol" href="${esc(d)}" target="_blank" rel="noopener">ПРОТОКОЛ ИСПЫТАНИЙ${docs.length>1?' '+(i+1):''}</a>`).join('')}</div>` : ''}<p class="disclaimer">Углеводы в анализе могут быть рассчитаны по остаточному принципу. Оценивайте показатели в комплексе и учитывайте возможные изменения рецептуры продукта после проверки.</p></section>`;
+        $('#modal').classList.add('open'); $('#modal').setAttribute('aria-hidden','false'); document.body.style.overflow='hidden';
+      };
+      const setupFilters = data => {
+        const cats = [...new Set(state.items.map(x=>x.cat).filter(Boolean))];
+        const shops = [...new Set(state.items.map(x=>x.shop).filter(Boolean))];
+        $('#categories').innerHTML = `<button class="chip active" data-category="">Все категории</button>` + cats.map(c=>`<button class="chip" data-category="${esc(c)}">${esc(c)}</button>`).join('');
+        $('#shops').innerHTML = `<button class="shop active" data-shop="">Все магазины</button>` + shops.map(s=>`<button class="shop" data-shop="${esc(s)}">${esc(s)}</button>`).join('');
+        $('#allCount').textContent = state.items.length.toLocaleString('ru-RU'); $('#catCount').textContent = cats.length;
+        $('#categories').onclick = e => { const b=e.target.closest('[data-category]'); if(!b)return; state.category=b.dataset.category; document.querySelectorAll('[data-category]').forEach(x=>x.classList.toggle('active',x===b)); render(); };
+        $('#shops').onclick = e => { const b=e.target.closest('[data-shop]'); if(!b)return; state.shop=b.dataset.shop; document.querySelectorAll('[data-shop]').forEach(x=>x.classList.toggle('active',x===b)); render(); };
+      };
+      const load = () => new Promise((resolve,reject) => { const s=document.createElement('script'); s.src=DATA_URL; s.onload=resolve; s.onerror=reject; document.head.appendChild(s); });
+      $('#search').addEventListener('input', e => { state.q=e.target.value.trim(); render(); });
+      $('#sort').addEventListener('change', e => { state.sort=e.target.value; render(); });
+      $('#grid').addEventListener('click', e => { const card=e.target.closest('[data-id]'); if(card)open(card.dataset.id); });
+      $('#modal').addEventListener('click', e => { if(e.target.id==='modal'||e.target.closest('.close'))close(); });
+      document.addEventListener('keydown', e => { if(e.key==='Escape')close(); });
+      load().then(() => { const data=window.LAB_DATA; state.items=Array.isArray(data?.items) ? data.items : []; setupFilters(data); $('#loading').remove(); render(); }).catch(() => { $('#loading').innerHTML='<b>Не удалось загрузить данные.</b><br>Попробуйте обновить страницу через минуту.'; });
+    })();
+  </script>
+</body>
+</html>
